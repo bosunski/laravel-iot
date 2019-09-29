@@ -1,0 +1,69 @@
+{
+    "name": "bosunski/laravel-iot",
+    "description": "A simple IoT focused Package for Laravel",
+    "keywords": [
+        "bosunski",
+        "laravel-iot"
+    ],
+    "homepage": "https://github.com/bosunski/laravel-iot",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Olatunbosun Egberinde",
+            "email": "bosunski@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "amphp/amp": "^2.1",
+        "amphp/parallel": "^1.1",
+        "amphp/react-adapter": "^2.0",
+        "binsoul/net-mqtt": "dev-phpunit",
+        "binsoul/net-mqtt-client-react": "dev-pm",
+        "illuminate/support": "^6.0",
+        "orchestra/testbench": "^4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bosunski\\LaravelIot\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bosunski\\LaravelIot\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bosunski\\LaravelIot\\LaravelIotServiceProvider"
+            ],
+            "aliases": {
+                "LaravelIot": "Bosunski\\LaravelIot\\LaravelIotFacade"
+            }
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/bosunski/net-mqtt-client-react"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/bosunski/net-mqtt"
+        }
+    ]
+}
