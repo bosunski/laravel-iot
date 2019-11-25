@@ -1,17 +1,18 @@
 <?php
 
-namespace Bosunski\LaravelIot;
+namespace Xeviant\LaravelIot;
 
 use Amp\Loop\DriverFactory;
 use Amp\ReactAdapter\ReactAdapter;
-use App\Foundation\Mqtt;
-use App\Foundation\MQTTClient;
-use App\Foundation\MqttHandler;
-use App\Foundation\MQTTServer;
-use App\Mqtt\Contracts\MQTTClientInterface;
-use App\Mqtt\Contracts\MQTTHandlerInterface;
+use Xeviant\LaravelIot\Console\Commands\MqttServerStart;
+use Xeviant\LaravelIot\Console\Commands\RestartMQTTServer;
+use Xeviant\LaravelIot\Foundation\MqttRouter;
+use Xeviant\LaravelIot\Foundation\MQTTClient;
+use Xeviant\LaravelIot\Foundation\MqttHandler;
+use Xeviant\LaravelIot\Foundation\MQTTServer;
+use Xeviant\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
+use Xeviant\LaravelIot\Mqtt\Contracts\MQTTHandlerInterface;
 use Illuminate\Contracts\Foundation\Application;
-use LaravelIot\Console\Commands\MqttServerStart;
 use Illuminate\Support\ServiceProvider;
 use React\Dns\Resolver\Factory as DNSResolverFactory;
 use React\EventLoop\LoopInterface;
@@ -58,8 +59,18 @@ class LaravelIotServiceProvider extends ServiceProvider
             ], 'lang');*/
 
             // Registering package commands.
+
+            $this->app->singleton('command.mqtt.server.start', function ($app) {
+                return new MqttServerStart;
+            });
+
+            $this->app->singleton('command.mqtt.server.restart', function ($app) {
+                return new RestartMQTTServer;
+            });
+
              $this->commands([
                  MqttServerStart::class,
+                 RestartMQTTServer::class,
              ]);
         }
     }
@@ -77,8 +88,8 @@ class LaravelIotServiceProvider extends ServiceProvider
             return new LaravelIot;
         });
 
-        $this->app->singleton(Mqtt::class, function ($container) {
-            return new Mqtt();
+        $this->app->singleton(MqttRouter::class, function ($container) {
+            return new MqttRouter();
         });
 
         $this->registerEventLoopBindings();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Bosunski\LaravelIot\Console\Commands;
+namespace Xeviant\LaravelIot\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;

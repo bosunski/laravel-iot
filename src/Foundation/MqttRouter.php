@@ -1,20 +1,18 @@
 <?php
 
-namespace Bosunski\LaravelIot\Foundation;
+namespace Xeviant\LaravelIot\Foundation;
 
 use Exception;
 use Illuminate\Support\Collection;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Throwable;
+use Xeviant\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
 
-class Mqtt
+class MqttRouter
 {
-    protected $controllerNamespace = '\\App\\Mqtt\\Controllers\\';
-
     private $topics = [];
 
     /**
@@ -31,12 +29,17 @@ class Mqtt
      * @var UrlMatcher
      */
     private $urlMatcher;
+    /**
+     * @var MQTTClientInterface
+     */
+    private $MQTTClient;
 
-    public function __construct()
+    public function __construct(MQTTClientInterface $MQTTClient)
     {
         $this->routes = new RouteCollection();
         $this->routeContext = new RequestContext("/");
         $this->urlMatcher = new UrlMatcher($this->routes, $this->routeContext);
+        $this->MQTTClient = $MQTTClient;
     }
 
     public function topic($identifier, $handler)
@@ -49,33 +52,27 @@ class Mqtt
         $route = new Route($identifier, ['handler' => $handler]);
 
         $this->routes->add($identifier, $route);
+
+        return $route;
     }
 
-    public function handle($mqtt, $input, $payload)
+    public function handle($topic, $payload = "")
     {
-        try {
-            $topicData = Collection::make($this->urlMatcher->match($input));
-            $params = $topicData->except(['_route', 'handler']);
-        } catch (ResourceNotFoundException $e) {
-            dump($e->getMessage());
+        $topicData = Collection::make($this->urlMatcher->match($topic));
+        $params = $topicData->except(['_route', 'handler']);
 
-            return false;
-        };
-
-        $params = array_merge($params->toArray(), ['payload' => json_decode($payload, true), 'mqtt' => $mqtt]);
+        $params = array_merge($params->toArray(), ['payload' => json_decode($payload, true), 'mqtt' => $this->MQTTClient]);
 
         if (is_callable($handler = $topicData->get('handler'))) return call_user_func_array($handler, $params);
 
-        $this->handleControllerCall($handler, $params);
+        return $this->handleControllerCall($handler, $params);
     }
 
     protected function handleControllerCall($handler, $params)
     {
         list($controller, $method) = explode('@', $handler);
 
-        $fqcn = $this->controllerNamespace . $controller;
-
-        $obj = app()->make($fqcn);
+        $obj = app()->make($controller);
 
         try {
             return call_user_func_array([$obj, $method], $params);

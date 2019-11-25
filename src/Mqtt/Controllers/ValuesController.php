@@ -1,6 +1,6 @@
 <?php
 
-namespace Bosunski\LaravelIot\Mqtt\Controllers;
+namespace Xeviant\LaravelIot\Mqtt\Controllers;
 
 
 

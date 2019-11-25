@@ -1,6 +1,6 @@
 <?php
 
-namespace Bosunski\LaravelIot\Mqtt\Contracts;
+namespace Xeviant\LaravelIot\Mqtt\Contracts;
 
 use BinSoul\Net\Mqtt\Connection;
 use BinSoul\Net\Mqtt\Message;

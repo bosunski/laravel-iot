@@ -1,8 +1,8 @@
 <?php
 
-use App\Foundation\Mqtt;
+use Xeviant\LaravelIot\Foundation\MqttRouter;
 
-$mqtt = app()->make(Mqtt::class);
+$mqtt = app()->make(MqttRouter::class);
 
 $mqtt->topic('/state/{id}', function ($id, $payload) {
     echo($payload);

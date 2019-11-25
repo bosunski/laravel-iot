@@ -1,6 +1,6 @@
 <?php
 
-namespace Bosunski\LaravelIot\Foundation;
+namespace Xeviant\LaravelIot\Foundation;
 
 /*
  	phpMQTT

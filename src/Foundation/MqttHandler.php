@@ -1,9 +1,9 @@
 <?php
 
-namespace Bosunski\LaravelIot\Foundation;
+namespace Xeviant\LaravelIot\Foundation;
 
-use Bosunski\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
-use Bosunski\LaravelIot\Mqtt\Contracts\MQTTHandlerInterface;
+use Xeviant\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
+use Xeviant\LaravelIot\Mqtt\Contracts\MQTTHandlerInterface;
 use BinSoul\Net\Mqtt\Connection;
 use BinSoul\Net\Mqtt\Message;
 use Exception;
@@ -19,7 +19,7 @@ class MqttHandler implements MQTTHandlerInterface
     private $client;
 
     /**
-     * @var Application|Mqtt
+     * @var Application|MqttRouter
      */
     private $mqttTopic;
 
@@ -29,7 +29,7 @@ class MqttHandler implements MQTTHandlerInterface
      */
     public function __construct(MQTTClientInterface $client)
     {
-        $this->mqttTopic = app(Mqtt::class);
+        $this->mqttTopic = app(MqttRouter::class);
         $this->client = $client;
     }
 

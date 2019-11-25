@@ -1,8 +1,8 @@
 <?php
 
-namespace Bosunski\LaravelIot\Console\Commands;
+namespace Xeviant\LaravelIot\Console\Commands;
 
-use Bosunski\LaravelIot\Foundation\MQTTServer;
+use Xeviant\LaravelIot\Foundation\MQTTServer;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Application;
 
@@ -13,7 +13,7 @@ class MqttServerStart extends Command
      *
      * @var string
      */
-    protected $signature = 'mqtt:server';
+    protected $signature = 'mqtt:serve';
 
     /**
      * The console command description.

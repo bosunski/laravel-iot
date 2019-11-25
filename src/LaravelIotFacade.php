@@ -1,6 +1,6 @@
 <?php
 
-namespace Bosunski\LaravelIot;
+namespace Xeviant\LaravelIot;
 
 use Illuminate\Support\Facades\Facade;
 

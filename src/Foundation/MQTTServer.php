@@ -1,11 +1,10 @@
 <?php
 
-
-namespace Bosunski\LaravelIot\Foundation;
+namespace Xeviant\LaravelIot\Foundation;
 
 use function Amp\call;
-use Bosunski\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
-use Bosunski\LaravelIot\Mqtt\Contracts\MQTTHandlerInterface;
+use Xeviant\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
+use Xeviant\LaravelIot\Mqtt\Contracts\MQTTHandlerInterface;
 use BinSoul\Net\Mqtt\DefaultConnection;
 use BinSoul\Net\Mqtt\DefaultSubscription;
 use BinSoul\Net\Mqtt\Message;
@@ -20,10 +19,12 @@ class MQTTServer
      * @var MQTTClientInterface
      */
     private $client;
+
     /**
      * @var MQTTHandlerInterface
      */
     private $handler;
+
     /**
      * @var LoopInterface
      */
@@ -116,17 +117,20 @@ class MQTTServer
     public function listen()
     {
         $this->registerHandlers();
-
         $connection = new DefaultConnection(config('mqtt.username'), config('mqtt.password'));
-        $connectionPromise = $this->client->connect(config('mqtt.host'), '1883', $connection);
+
+        $connectionPromise = $this->client->connect(
+            config('mqtt.host'),
+            config('mqtt.port'),
+            $connection
+        );
 
         $connectionPromise->then(
             function () {
                 $this->client->subscribe(new DefaultSubscription('#'))
                     ->then(function (Subscription $subscription) {
                         echo sprintf("Subscribe: %s\n", $subscription->getFilter());
-                    })
-                    ->otherwise(function (Exception $e) {
+                    })->otherwise(function (Exception $e) {
                         echo sprintf("Error: %s\n", $e->getMessage());
                     });
             });

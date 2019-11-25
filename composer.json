@@ -3,7 +3,12 @@
     "description": "A simple IoT focused Package for Laravel",
     "keywords": [
         "bosunski",
-        "laravel-iot"
+        "laravel-iot",
+        "laravel",
+        "php",
+        "mqtt",
+        "php-iot",
+        "iot"
     ],
     "homepage": "https://github.com/bosunski/laravel-iot",
     "license": "MIT",
@@ -23,19 +28,20 @@
         "binsoul/net-mqtt": "dev-phpunit",
         "binsoul/net-mqtt-client-react": "dev-pm",
         "illuminate/support": "^6.0",
-        "orchestra/testbench": "^4.0"
+        "orchestra/testbench": "^4.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0"
     },
     "autoload": {
         "psr-4": {
-            "Bosunski\\LaravelIot\\": "src"
+            "Xeviant\\LaravelIot\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Bosunski\\LaravelIot\\Tests\\": "tests"
+            "Xeviant\\LaravelIot\\Tests\\": "tests"
         }
     },
     "scripts": {
