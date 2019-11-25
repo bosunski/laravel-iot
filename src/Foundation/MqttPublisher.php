@@ -19,7 +19,7 @@ class MqttPublisher
 
     public function publish(string $topic, string $payload = "")
     {
-        $this->client->publish(new DefaultMessage($topic, $payload))->then(function ($done) use ($topic, $payload) {
+        return $this->client->publish(new DefaultMessage($topic, $payload))->then(function ($done) use ($topic, $payload) {
             echo "Published:=> $payload on $topic\n";
         });
     }
