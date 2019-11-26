@@ -2,6 +2,7 @@
 
 namespace Xeviant\LaravelIot\Foundation;
 
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTHandlerInterface;
 use BinSoul\Net\Mqtt\Connection;
@@ -66,7 +67,6 @@ class MqttHandler implements MQTTHandlerInterface
 
         if ($message->isDuplicate()) {
             echo ' (duplicate)';
-
             return;
         }
 
@@ -77,7 +77,11 @@ class MqttHandler implements MQTTHandlerInterface
         echo ': '.$message->getTopic().' => ' . mb_strimwidth($message->getPayload(), 0, 50, '...');
         echo PHP_EOL;
 
-        $this->mqttTopic->handle($client, $message->getTopic(), $message->getPayload());
+        try {
+            $this->mqttTopic->handle($client, $message->getTopic(), $message->getPayload());
+        } catch (ResourceNotFoundException $exception) {
+            echo $exception->getMessage(), PHP_EOL;
+        }
     }
 
     public function onWarning(Exception $exception)

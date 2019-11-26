@@ -59,11 +59,7 @@ class MQTTServer
         $this->client->on('error', Closure::fromCallable([$this->handler, 'onError']));
 
         $this->client->on('message', function (Message $message) {
-
-            call(function () use ($message) {
-                yield  $this->handler->onMessage($message, $this->client);
-            });
-
+            $this->handler->onMessage($message, $this->client);
             $this->stopIfNecessary();
         });
     }

@@ -29,7 +29,8 @@
         "binsoul/net-mqtt-client-react": "dev-pm",
         "illuminate/support": "^6.0",
         "orchestra/testbench": "^4.0",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-mbstring": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0"
