@@ -19,7 +19,7 @@ use React\EventLoop\LoopInterface;
 use React\Socket\DnsConnector;
 use React\Socket\TcpConnector;
 
-class LaravelIotServiceProvider extends ServiceProvider
+class LaravelMqttServiceProviderSample extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -37,11 +37,11 @@ class LaravelIotServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../config/config.php' => config_path('laravel-iot.php'),
-            ], 'config');
+            ], 'laravel-mqtt-config');
 
             $this->publishes([
                 __DIR__.'/../routes/mqtt.php' => base_path('routes/topics.php'),
-            ], 'routes');
+            ], 'laravel-mqtt-topics');
 
             // Publishing the views.
             /*$this->publishes([

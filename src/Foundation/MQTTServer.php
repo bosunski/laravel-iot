@@ -2,7 +2,6 @@
 
 namespace Xeviant\LaravelIot\Foundation;
 
-use function Amp\call;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTHandlerInterface;
 use BinSoul\Net\Mqtt\DefaultConnection;

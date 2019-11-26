@@ -3,7 +3,9 @@
 namespace Xeviant\LaravelIot;
 
 use Amp\Loop\DriverFactory;
-use Amp\ReactAdapter\ReactAdapter;
+use React\EventLoop\Factory;
+use Xeviant\LaravelIot\Console\Commands\MqttServerStart;
+use Xeviant\LaravelIot\Console\Commands\RestartMQTTServer;
 use Xeviant\LaravelIot\Foundation\MqttPublisher;
 use Xeviant\LaravelIot\Foundation\MqttRouter;
 use Xeviant\LaravelIot\Foundation\MQTTClient;
@@ -18,7 +20,7 @@ use React\EventLoop\LoopInterface;
 use React\Socket\DnsConnector;
 use React\Socket\TcpConnector;
 
-class MQTTServiceProvider extends ServiceProvider
+class LaravelMQTTServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -27,6 +29,33 @@ class MQTTServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . "/../config/config.php" => config_path("mqtt.php")
+            ], 'laravel-mqtt-config');
+
+            $this->publishes([
+                __DIR__ . "/../routes/mqtt.php" => config_path("topics.php")
+            ], 'laravel-mqtt-topics');
+
+            $this->bootCommands();
+        }
+    }
+
+    public function bootCommands()
+    {
+        $this->app->singleton('command.mqtt.server.start', function ($app) {
+            return new MqttServerStart;
+        });
+
+        $this->app->singleton('command.mqtt.server.restart', function ($app) {
+            return new RestartMQTTServer;
+        });
+
+        $this->commands([
+            MqttServerStart::class,
+            RestartMQTTServer::class,
+        ]);
     }
 
     /**
@@ -36,15 +65,25 @@ class MQTTServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(MqttRouter::class, function (Application $container) {
-            return new MqttRouter($container->get(MQTTClientInterface::class));
-        });
-
+        $this->registerRouter();
         $this->registerEventLoopBindings();
-
         $this->registerMQTTEventHandlers();
         $this->registerMQTTClient();
         $this->registerMQTTServer();
+        $this->loadConfiguration();
+        $this->registerMQTTPublisher();
+    }
+
+    public function registerRouter()
+    {
+        $this->app->singleton(MqttRouter::class, function (Application $container) {
+            return new MqttRouter($container->get(MQTTClientInterface::class));
+        });
+    }
+
+    public function loadConfiguration()
+    {
+        $this->mergeConfigFrom(__DIR__ . "/../config/config.php", "mqtt");
     }
 
     protected function registerMQTTClient()
@@ -70,11 +109,7 @@ class MQTTServiceProvider extends ServiceProvider
     protected function registerEventLoopBindings()
     {
         $this->app->singleton(LoopInterface::class, function (Application $app) {
-            return new ReactAdapter($app->make('amp.loop'));
-        });
-
-        $this->app->singleton(LoopInterface::class, function (Application $app) {
-            return new ReactAdapter($app->make('amp.loop'));
+            return Factory::create();
         });
 
         $this->app->singleton('amp.loop', function ($app) {

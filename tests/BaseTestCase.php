@@ -3,7 +3,7 @@
 namespace Xeviant\LaravelIot\Tests;
 
 use Orchestra\Testbench\TestCase;
-use Xeviant\LaravelIot\MQTTServiceProvider;
+use Xeviant\LaravelIot\LaravelMQTTServiceProvider;
 
 class BaseTestCase extends TestCase
 {
@@ -15,7 +15,7 @@ class BaseTestCase extends TestCase
     protected function getPackageProviders($app)
     {
         return [
-            MQTTServiceProvider::class,
+            LaravelMQTTServiceProvider::class,
         ];
     }
 }
