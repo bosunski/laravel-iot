@@ -4,11 +4,12 @@ namespace Xeviant\LaravelIot\Tests\Feature;
 
 use Amp\Loop\Driver;
 use React\EventLoop\LoopInterface;
-use Xeviant\LaravelIot\Console\Commands\MqttServerStart;
+use Xeviant\LaravelIot\Console\Commands\MqttListenerStart;
+use Xeviant\LaravelIot\Console\Commands\MqttTopics;
 use Xeviant\LaravelIot\Console\Commands\RestartMQTTServer;
 use Xeviant\LaravelIot\Foundation\MqttPublisher;
 use Xeviant\LaravelIot\Foundation\MqttRouter;
-use Xeviant\LaravelIot\Foundation\MQTTServer;
+use Xeviant\LaravelIot\Foundation\MQTTListener;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTHandlerInterface;
 use Xeviant\LaravelIot\Tests\BaseTestCase;
@@ -38,7 +39,7 @@ class MQTTServiceProviderTest extends BaseTestCase
 
     public function test_mqtt_server_was_registered()
     {
-        $this->assertInstanceOf(MQTTServer::class, $this->app->make('xeviant.mqtt.server'));
+        $this->assertInstanceOf(MQTTListener::class, $this->app->make('xeviant.mqtt.listener'));
     }
 
     public function test_mqtt_publisher_was_registered()
@@ -49,8 +50,9 @@ class MQTTServiceProviderTest extends BaseTestCase
     public function test_mqtt_commands_were_registered_at_boot()
     {
         if ($this->app->isBooted()) {
-            $this->assertInstanceOf(MqttServerStart::class, $this->app->make('command.mqtt.server.start'));
+            $this->assertInstanceOf(MqttListenerStart::class, $this->app->make('command.mqtt.server.start'));
             $this->assertInstanceOf(RestartMQTTServer::class, $this->app->make('command.mqtt.server.restart'));
+            $this->assertInstanceOf(MqttTopics::class, $this->app->make('command.mqtt.topics'));
         }
     }
 }

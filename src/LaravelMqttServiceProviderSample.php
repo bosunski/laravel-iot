@@ -4,12 +4,12 @@ namespace Xeviant\LaravelIot;
 
 use Amp\Loop\DriverFactory;
 use Amp\ReactAdapter\ReactAdapter;
-use Xeviant\LaravelIot\Console\Commands\MqttServerStart;
+use Xeviant\LaravelIot\Console\Commands\MqttListenerStart;
 use Xeviant\LaravelIot\Console\Commands\RestartMQTTServer;
 use Xeviant\LaravelIot\Foundation\MqttRouter;
 use Xeviant\LaravelIot\Foundation\MQTTClient;
 use Xeviant\LaravelIot\Foundation\MqttHandler;
-use Xeviant\LaravelIot\Foundation\MQTTServer;
+use Xeviant\LaravelIot\Foundation\MQTTListener;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTHandlerInterface;
 use Illuminate\Contracts\Foundation\Application;
@@ -61,7 +61,7 @@ class LaravelMqttServiceProviderSample extends ServiceProvider
             // Registering package commands.
 
             $this->app->singleton('command.mqtt.server.start', function ($app) {
-                return new MqttServerStart;
+                return new MqttListenerStart;
             });
 
             $this->app->singleton('command.mqtt.server.restart', function ($app) {
@@ -69,7 +69,7 @@ class LaravelMqttServiceProviderSample extends ServiceProvider
             });
 
              $this->commands([
-                 MqttServerStart::class,
+                 MqttListenerStart::class,
                  RestartMQTTServer::class,
              ]);
         }
@@ -124,7 +124,7 @@ class LaravelMqttServiceProviderSample extends ServiceProvider
 
     protected function registerMQTTServer()
     {
-        $this->app->singleton('xeviant.mqtt.server', MQTTServer::class);
+        $this->app->singleton('xeviant.mqtt.server', MQTTListener::class);
     }
 
     protected function registerMQTTEventHandlers()

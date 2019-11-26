@@ -2,28 +2,28 @@
 
 namespace Xeviant\LaravelIot\Console\Commands;
 
-use Xeviant\LaravelIot\Foundation\MQTTServer;
+use Xeviant\LaravelIot\Foundation\MQTTListener;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Application;
 
-class MqttServerStart extends Command
+class MqttTopics extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mqtt:serve';
+    protected $signature = 'mqtt:topics';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Starts MQTT Server';
+    protected $description = 'Shows MQTT Topics registered for listening';
 
     /**
-     * @var Application|MQTTServer
+     * @var Application|MQTTListener
      */
     private $mqttServer;
 
@@ -34,7 +34,7 @@ class MqttServerStart extends Command
      */
     public function __construct()
     {
-        $this->mqttServer = app('xeviant.mqtt.server');
+        $this->mqttServer = app('xeviant.mqtt.listener');
         parent::__construct();
     }
 
@@ -45,6 +45,6 @@ class MqttServerStart extends Command
      */
     public function handle()
     {
-        return $this->mqttServer->listen();
+        $topics = app('mqtt.router')->geTopics();
     }
 }

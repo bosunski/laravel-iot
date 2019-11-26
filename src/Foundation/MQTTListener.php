@@ -12,7 +12,7 @@ use Closure;
 use Exception;
 use React\EventLoop\LoopInterface;
 
-class MQTTServer
+class MQTTListener
 {
     /**
      * @var MQTTClientInterface
