@@ -27,6 +27,16 @@ class MqttRouterTest extends BaseTestCase
         $this->assertEquals($result, $router->handle("/", "data"));
     }
 
+    public function test_router_can_handle_controller_call()
+    {
+        $router = $this->app->make(MqttRouter::class);
+        $result = "result";
+
+        $router->topic('/', 'Xeviant\LaravelIot\Tests\Unit\TestController@test');
+
+        $this->assertEquals($result, $router->handle("/", "data"));
+    }
+
     public function test_handle_works_when_payload_is_not_passed()
     {
         $router = $this->app->make(MqttRouter::class);
@@ -67,5 +77,12 @@ class MqttRouterTest extends BaseTestCase
     {
         $router = $this->app->make(MqttRouter::class);
         $this->assertEmpty($router->getTopics());
+    }
+}
+
+class TestController {
+    public function test()
+    {
+        return "result";
     }
 }

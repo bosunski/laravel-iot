@@ -81,6 +81,7 @@ class MQTTListener
      */
     public function stop($status = 0)
     {
+        $this->client->disconnect();
         exit($status);
     }
 
@@ -128,9 +129,12 @@ class MQTTListener
                     })->otherwise(function (Exception $e) {
                         echo sprintf("Error: %s\n", $e->getMessage());
                     });
+
+                return true;
             });
 
         $this->lastRestart = $this->getTimestampOfLastServerRestart();
-        $this->startServer();
+
+        return $connectionPromise;
     }
 }

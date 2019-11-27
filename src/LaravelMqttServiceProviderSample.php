@@ -5,7 +5,7 @@ namespace Xeviant\LaravelIot;
 use Amp\Loop\DriverFactory;
 use Amp\ReactAdapter\ReactAdapter;
 use Xeviant\LaravelIot\Console\Commands\MqttListenerStart;
-use Xeviant\LaravelIot\Console\Commands\RestartMQTTServer;
+use Xeviant\LaravelIot\Console\Commands\MQTTListenerRestart;
 use Xeviant\LaravelIot\Foundation\MqttRouter;
 use Xeviant\LaravelIot\Foundation\MQTTClient;
 use Xeviant\LaravelIot\Foundation\MqttHandler;
@@ -65,12 +65,12 @@ class LaravelMqttServiceProviderSample extends ServiceProvider
             });
 
             $this->app->singleton('command.mqtt.server.restart', function ($app) {
-                return new RestartMQTTServer;
+                return new MQTTListenerRestart;
             });
 
              $this->commands([
                  MqttListenerStart::class,
-                 RestartMQTTServer::class,
+                 MQTTListenerRestart::class,
              ]);
         }
     }

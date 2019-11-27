@@ -71,6 +71,10 @@ class MqttHandler implements MQTTHandlerInterface
         }
 
         if ($message->isRetained()) {
+//            if (app()->runningUnitTests()) {
+//                return;
+//            }
+
             echo ' (retained)';
         }
 
@@ -78,7 +82,7 @@ class MqttHandler implements MQTTHandlerInterface
         echo PHP_EOL;
 
         try {
-            $this->mqttTopic->handle($client, $message->getTopic(), $message->getPayload());
+            $this->mqttTopic->handle($message->getTopic(), $message->getPayload());
         } catch (ResourceNotFoundException $exception) {
             echo $exception->getMessage(), PHP_EOL;
         }

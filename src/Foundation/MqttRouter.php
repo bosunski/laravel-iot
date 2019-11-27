@@ -2,13 +2,11 @@
 
 namespace Xeviant\LaravelIot\Foundation;
 
-use Exception;
 use Illuminate\Support\Collection;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Throwable;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
 
 class MqttRouter
@@ -74,13 +72,7 @@ class MqttRouter
 
         $obj = app()->make($controller);
 
-        try {
-            return call_user_func_array([$obj, $method], $params);
-        } catch (Exception $exception) {
-            echo "Error: " . $exception->getMessage();
-        } catch (Throwable $throwable) {
-            echo "Error: " . $throwable->getMessage();
-        }
+        return call_user_func_array([$obj, $method], $params);
     }
 
     public function getTopics()

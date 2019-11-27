@@ -5,6 +5,7 @@ namespace Xeviant\LaravelIot\Console\Commands;
 use Xeviant\LaravelIot\Foundation\MQTTListener;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Application;
+use Xeviant\LaravelIot\Foundation\MqttRouter;
 
 class MqttTopics extends Command
 {
@@ -25,7 +26,9 @@ class MqttTopics extends Command
     /**
      * @var Application|MQTTListener
      */
-    private $mqttServer;
+    private $MQTTListener;
+
+    private $headers = ['Topic', 'Handler'];
 
     /**
      * Create a new command instance.
@@ -34,7 +37,7 @@ class MqttTopics extends Command
      */
     public function __construct()
     {
-        $this->mqttServer = app('xeviant.mqtt.listener');
+        $this->MQTTListener = app('xeviant.mqtt.listener');
         parent::__construct();
     }
 
@@ -45,6 +48,24 @@ class MqttTopics extends Command
      */
     public function handle()
     {
-        $topics = app('mqtt.router')->geTopics();
+        /**
+         * @var $router MqttRouter
+         */
+        $router = app('mqtt.router');
+
+        $topics = $router->getTopics();
+
+        $this->table($this->headers, collect($topics)->map(function ($topic) {
+            return $this->getTopicDetails($topic);
+        }));
+    }
+
+    protected function getTopicDetails($topic): array
+    {
+        if (is_callable($topic['handler'])) {
+            $topic['handler'] = 'Closure';
+        }
+
+        return $topic;
     }
 }

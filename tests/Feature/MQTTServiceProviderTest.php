@@ -6,7 +6,7 @@ use Amp\Loop\Driver;
 use React\EventLoop\LoopInterface;
 use Xeviant\LaravelIot\Console\Commands\MqttListenerStart;
 use Xeviant\LaravelIot\Console\Commands\MqttTopics;
-use Xeviant\LaravelIot\Console\Commands\RestartMQTTServer;
+use Xeviant\LaravelIot\Console\Commands\MQTTListenerRestart;
 use Xeviant\LaravelIot\Foundation\MqttPublisher;
 use Xeviant\LaravelIot\Foundation\MqttRouter;
 use Xeviant\LaravelIot\Foundation\MQTTListener;
@@ -51,7 +51,7 @@ class MQTTServiceProviderTest extends BaseTestCase
     {
         if ($this->app->isBooted()) {
             $this->assertInstanceOf(MqttListenerStart::class, $this->app->make('command.mqtt.server.start'));
-            $this->assertInstanceOf(RestartMQTTServer::class, $this->app->make('command.mqtt.server.restart'));
+            $this->assertInstanceOf(MQTTListenerRestart::class, $this->app->make('command.mqtt.server.restart'));
             $this->assertInstanceOf(MqttTopics::class, $this->app->make('command.mqtt.topics'));
         }
     }

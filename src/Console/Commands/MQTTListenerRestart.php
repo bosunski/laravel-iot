@@ -5,7 +5,7 @@ namespace Xeviant\LaravelIot\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 
-class RestartMQTTServer extends Command
+class MQTTListenerRestart extends Command
 {
     /**
      * The name and signature of the console command.
@@ -19,9 +19,7 @@ class RestartMQTTServer extends Command
      *
      * @var string
      */
-    protected $description = 'Sends a Restart Signal to the MQTT Server!';
-
-    protected $deviceIds = [];
+    protected $description = 'Sends a Restart Signal to the MQTT Listener!';
 
     /**
      * Execute the console command.
@@ -32,6 +30,6 @@ class RestartMQTTServer extends Command
     {
         $this->laravel['cache']->forever('xeviant:mqtt:restart', Carbon::now()->getTimestamp());
 
-        $this->info('MQTT Server Restart Signal Sent');
+        $this->info('MQTT Listener Restart Signal Sent');
     }
 }
