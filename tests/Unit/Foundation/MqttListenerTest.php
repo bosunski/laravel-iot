@@ -7,7 +7,7 @@ use React\Promise\PromiseInterface;
 use Xeviant\LaravelIot\Foundation\MQTTListener;
 use Xeviant\LaravelIot\Tests\Cases\LoopBasedTestCase;
 
-class MqttListenStartCommandTest extends LoopBasedTestCase
+class MqttListenerTest extends LoopBasedTestCase
 {
     /**
      * This test will fail if
@@ -20,6 +20,7 @@ class MqttListenStartCommandTest extends LoopBasedTestCase
         $listener = $this->app->make(MQTTListener::class);
         $connection = $listener->listen();
         $this->assertInstanceOf(PromiseInterface::class, $connection);
+
 
         $connection->then(function ($isStarted) {
             $this->assertTrue($isStarted);

@@ -71,9 +71,6 @@ class MqttHandler implements MQTTHandlerInterface
         }
 
         if ($message->isRetained()) {
-//            if (app()->runningUnitTests()) {
-//                return;
-//            }
 
             echo ' (retained)';
         }

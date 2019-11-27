@@ -12,7 +12,7 @@ class LoopBasedTestCase extends BaseTestCase
      */
     private $loop;
 
-    const MAXIMUM_EXECUTION_TIMEOUT = 10;
+    const MAXIMUM_EXECUTION_TIMEOUT = 2;
 
     protected function setUp(): void
     {
