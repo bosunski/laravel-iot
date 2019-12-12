@@ -3,7 +3,7 @@
 namespace Xeviant\LaravelIot;
 
 use Amp\Loop\DriverFactory;
-use Amp\ReactAdapter\ReactAdapter;
+use React\EventLoop\Factory;
 use Xeviant\LaravelIot\Console\Commands\MqttListenerStart;
 use Xeviant\LaravelIot\Console\Commands\MQTTListenerRestart;
 use Xeviant\LaravelIot\Foundation\MqttRouter;
@@ -80,24 +80,24 @@ class LaravelMqttServiceProviderSample extends ServiceProvider
      */
     public function register()
     {
-        // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-iot');
-
-        // Register the main class to use with the facade
-        $this->app->singleton('laravel-iot', function () {
-            return new LaravelIot;
-        });
-
-        $this->app->singleton(MqttRouter::class, function ($container) {
-            return new MqttRouter();
-        });
-
-        $this->registerEventLoopBindings();
-
-        $this->registerMysql();
-        $this->registerMQTTEventHandlers();
-        $this->registerMQTTClient();
-        $this->registerMQTTServer();
+//        // Automatically apply the package configuration
+//        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-iot');
+//
+//        // Register the main class to use with the facade
+//        $this->app->singleton('laravel-iot', function () {
+//            return new LaravelIot;
+//        });
+//
+//        $this->app->singleton(MqttRouter::class, function ($container) {
+//            return new MqttRouter();
+//        });
+//
+//        $this->registerEventLoopBindings();
+//
+//        $this->registerMysql();
+//        $this->registerMQTTEventHandlers();
+//        $this->registerMQTTClient();
+//        $this->registerMQTTServer();
     }
 
     protected function registerMysql()
@@ -135,7 +135,7 @@ class LaravelMqttServiceProviderSample extends ServiceProvider
     protected function registerEventLoopBindings()
     {
         $this->app->singleton(LoopInterface::class, function (Application $app) {
-            return new ReactAdapter($app->make('amp.loop'));
+            return Factory::create();
         });
 
         $this->app->singleton('amp.loop', function ($app) {

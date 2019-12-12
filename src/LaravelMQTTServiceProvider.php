@@ -2,7 +2,6 @@
 
 namespace Xeviant\LaravelIot;
 
-use Amp\Loop\DriverFactory;
 use React\EventLoop\Factory;
 use Xeviant\LaravelIot\Console\Commands\MqttListenerStart;
 use Xeviant\LaravelIot\Console\Commands\MqttTopics;
@@ -36,7 +35,7 @@ class LaravelMQTTServiceProvider extends ServiceProvider
             ], 'laravel-mqtt-config');
 
             $this->publishes([
-                __DIR__ . "/../routes/mqtt.php" => config_path("topics.php")
+                __DIR__ . "/../routes/mqtt.php" => base_path("routes/topics.php")
             ], 'laravel-mqtt-topics');
 
             $this->bootCommands();
@@ -71,10 +70,10 @@ class LaravelMQTTServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerRouter();
         $this->registerEventLoopBindings();
         $this->registerMQTTEventHandlers();
         $this->registerMQTTClient();
+        $this->registerRouter();
         $this->registerMQTTServer();
         $this->loadConfiguration();
         $this->registerMQTTPublisher();
@@ -120,10 +119,6 @@ class LaravelMQTTServiceProvider extends ServiceProvider
     {
         $this->app->singleton(LoopInterface::class, function (Application $app) {
             return Factory::create();
-        });
-
-        $this->app->singleton('amp.loop', function ($app) {
-            return (new DriverFactory())->create();
         });
     }
 

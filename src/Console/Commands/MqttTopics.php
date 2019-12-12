@@ -23,23 +23,9 @@ class MqttTopics extends Command
      */
     protected $description = 'Shows MQTT Topics registered for listening';
 
-    /**
-     * @var Application|MQTTListener
-     */
-    private $MQTTListener;
 
     private $headers = ['Topic', 'Handler'];
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->MQTTListener = app('xeviant.mqtt.listener');
-        parent::__construct();
-    }
 
     /**
      * Execute the console command.

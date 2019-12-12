@@ -40,7 +40,7 @@ class MQTTListener
     {
         $this->client = $client;
         $this->handler = $handler;
-        $this->loop = app('amp.loop');
+        $this->loop = app(LoopInterface::class);
     }
 
     protected function startServer()
@@ -120,7 +120,7 @@ class MQTTListener
             config('mqtt.port'),
             $connection
         );
-
+        
         $connectionPromise->then(
             function () {
                 $this->client->subscribe(new DefaultSubscription('#'))
@@ -134,7 +134,7 @@ class MQTTListener
             });
 
         $this->lastRestart = $this->getTimestampOfLastServerRestart();
-
+        
         return $connectionPromise;
     }
 }

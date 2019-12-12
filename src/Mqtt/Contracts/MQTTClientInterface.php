@@ -6,6 +6,7 @@ use BinSoul\Net\Mqtt\Connection;
 use BinSoul\Net\Mqtt\Subscription;
 use Evenement\EventEmitterInterface;
 use React\Promise\ExtendedPromiseInterface;
+use React\Promise\PromiseInterface;
 
 interface MQTTClientInterface extends EventEmitterInterface
 {
@@ -20,7 +21,7 @@ interface MQTTClientInterface extends EventEmitterInterface
      * @param int $timeout
      * @return ExtendedPromiseInterface
      */
-    public function connect($host, $port = 1883, Connection $connection = null, $timeout = 5);
+    public function connect(string $host, int $port = 1883, ?Connection $connection = null, int $timeout = 5): PromiseInterface;
     public function disconnect();
     public function subscribe(Subscription $subscription);
 }
