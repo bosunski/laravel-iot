@@ -34,12 +34,7 @@ class MqttTopics extends Command
      */
     public function handle()
     {
-        /**
-         * @var $router MqttRouter
-         */
-        $router = app('mqtt.router');
-
-        $topics = $router->getTopics();
+        $topics = app('mqtt.router')->getTopics();
 
         $this->table($this->headers, collect($topics)->map(function ($topic) {
             return $this->getTopicDetails($topic);

@@ -40,6 +40,10 @@ class LaravelMQTTServiceProvider extends ServiceProvider
 
             $this->bootCommands();
         }
+
+        if (file_exists(base_path("routes/topics.php"))) {
+            require base_path("routes/topics.php");
+        }
     }
 
     public function bootCommands()
