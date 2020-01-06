@@ -140,4 +140,10 @@ class LaravelMQTTServiceProvider extends ServiceProvider
         $this->app->singleton('xeviant.mqtt', MqttManager::class);
         $this->app->singleton(MqttManager::class, MqttManager::class);
     }
+
+    protected function registerConsoleWriter()
+    {
+        $this->app->singleton('xeviant.mqtt', MqttManager::class);
+        $this->app->singleton(MqttManager::class, MqttManager::class);
+    }
 }

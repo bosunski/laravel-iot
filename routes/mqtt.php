@@ -2,12 +2,12 @@
 
 use Xeviant\LaravelIot\Facade\Mqtt;
 
-Mqtt::topic('/hello', function ($payload) {
+Mqtt::subscribe('/hello', function ($payload) {
     echo($payload);
 });
 
-Mqtt::topic('/values/{id}', 'ValuesController@updateValues');
+Mqtt::subscribe('/values/{id}', 'ValuesController@updateValues');
 
-Mqtt::topic('/deploy/:id', function ($id, $payload) {
+Mqtt::subscribe('/deploy/:id', function ($id, $payload) {
     echo($payload);
 });

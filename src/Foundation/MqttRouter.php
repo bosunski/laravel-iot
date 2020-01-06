@@ -54,7 +54,7 @@ class MqttRouter
         return $route;
     }
 
-    public function handle($topic, $payload = "")
+    public function dispatchToRoute($topic, $payload = "")
     {
         $topicData = Collection::make($this->urlMatcher->match($topic));
         $params = $topicData->except(['_route', 'handler']);
@@ -65,10 +65,10 @@ class MqttRouter
             return call_user_func_array($handler, $params);
         }
 
-        return $this->handleControllerCall($handler, $params);
+        return $this->dispatchToController($handler, $params);
     }
 
-    protected function handleControllerCall($handler, $params)
+    protected function dispatchToController($handler, $params)
     {
         list($controller, $method) = explode('@', $handler);
 

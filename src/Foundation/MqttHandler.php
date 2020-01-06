@@ -22,7 +22,7 @@ class MqttHandler implements MQTTHandlerInterface
     /**
      * @var Application|MqttRouter
      */
-    private $mqttTopic;
+    private $mqttRouter;
 
     /**
      * MqttHandler constructor.
@@ -30,30 +30,30 @@ class MqttHandler implements MQTTHandlerInterface
      */
     public function __construct(MQTTClientInterface $client)
     {
-        $this->mqttTopic = app(MqttRouter::class);
+        $this->mqttRouter = app(MqttRouter::class);
         $this->client = $client;
     }
 
     public function onOpen()
     {
-        echo sprintf("Open: %s:%s\n", $this->client->getHost(), $this->client->getPort());
+        echo sprintf("MQTT Connection Opened: %s:%s\n", $this->client->getHost(), $this->client->getPort());
     }
 
     public function onClose()
     {
-        echo sprintf("Close: %s:%s\n", $this->client->getHost(), $this->client->getPort());
+        echo sprintf("MQTT Connection Closed: %s:%s\n", $this->client->getHost(), $this->client->getPort());
 
         App::make(LoopInterface::class)->stop();
     }
 
     public function onConnect(Connection $connection)
     {
-        echo sprintf("Connect: client=%s\n", $connection->getClientID());
+        echo sprintf("Client *%s* Connected:\n", $connection->getClientID());
     }
 
     public function onDisconnect(Connection $connection)
     {
-        echo sprintf("Disconnect: client=%s\n", $connection->getClientID());
+        echo sprintf("Client *%s* Disconnected\n", $connection->getClientID());
     }
 
     /**
@@ -63,23 +63,22 @@ class MqttHandler implements MQTTHandlerInterface
      */
     public function onMessage(Message $message, MQTTClientInterface $client = null)
     {
-        echo 'Message';
+        echo '📩 Message Received';
 
         if ($message->isDuplicate()) {
-            echo ' (duplicate)';
+            echo ' [duplicated]';
             return;
         }
 
         if ($message->isRetained()) {
-
-            echo ' (retained)';
+            echo ' [retained]';
         }
 
         echo ': '.$message->getTopic().' => ' . mb_strimwidth($message->getPayload(), 0, 50, '...');
         echo PHP_EOL;
 
         try {
-            $this->mqttTopic->handle($message->getTopic(), $message->getPayload());
+            $this->mqttRouter->dispatchToRoute($message->getTopic(), $message->getPayload());
         } catch (ResourceNotFoundException $exception) {
             echo $exception->getMessage(), PHP_EOL;
         }

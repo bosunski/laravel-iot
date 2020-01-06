@@ -22,8 +22,13 @@ class MqttManager
         $this->router = $router;
     }
 
-    public function topic(string $topic, $handler): Route
+    public function subscribe(string $topic, $handler): Route
     {
         return $this->router->topic($topic, $handler);
+    }
+
+    public function publish(string $topic, string $payload = ""): void
+    {
+        resolve('mqtt.publisher')->publish($topic, $payload);
     }
 }
