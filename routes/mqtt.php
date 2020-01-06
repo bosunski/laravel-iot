@@ -7,7 +7,3 @@ Mqtt::subscribe('/hello', function ($payload) {
 });
 
 Mqtt::subscribe('/values/{id}', 'ValuesController@updateValues');
-
-Mqtt::subscribe('/deploy/:id', function ($id, $payload) {
-    echo($payload);
-});
