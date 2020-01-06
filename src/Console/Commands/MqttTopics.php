@@ -2,10 +2,7 @@
 
 namespace Xeviant\LaravelIot\Console\Commands;
 
-use Xeviant\LaravelIot\Foundation\MQTTListener;
 use Illuminate\Console\Command;
-use Illuminate\Foundation\Application;
-use Xeviant\LaravelIot\Foundation\MqttRouter;
 
 class MqttTopics extends Command
 {

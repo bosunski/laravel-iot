@@ -125,14 +125,16 @@ class MQTTListener
             $this->createDefaultConnection()
         );
 
+        dump(['working']);
         $connectionPromise->then(
             function () {
                 if (config('mqtt.subscription', 'defined') === 'all') {
                     return $this->subscribeToAllTopics();
                 }
-
                 return $this->subscribeToDefinedTopics();
-            });
+            }, function (Exception $e) {
+                echo $e->getMessage();
+        });
 
         $this->lastRestart = $this->getTimestampOfLastServerRestart();
 

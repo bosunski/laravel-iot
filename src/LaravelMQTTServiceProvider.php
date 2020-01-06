@@ -92,7 +92,7 @@ class LaravelMQTTServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('mqtt.router', function (Application $container) {
-            return new MqttRouter($container->get(MQTTClientInterface::class));
+            return $container->make(MqttRouter::class);
         });
     }
 
