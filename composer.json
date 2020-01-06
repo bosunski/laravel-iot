@@ -26,6 +26,7 @@
         "ext-mbstring": "*",
         "binsoul/net-mqtt": "^0.7.0",
         "binsoul/net-mqtt-client-react": "^0.7.1",
+        "clue/stdio-react": "^2.3",
         "illuminate/support": "^6.0",
         "orchestra/testbench": "^4.0"
     },

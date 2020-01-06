@@ -3,6 +3,8 @@
 namespace Xeviant\LaravelIot\Foundation;
 
 use BinSoul\Net\Mqtt\Connection;
+use Illuminate\Contracts\Foundation\Application;
+use Xeviant\LaravelIot\Helpers\Console;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTHandlerInterface;
 use BinSoul\Net\Mqtt\DefaultConnection;
@@ -42,12 +44,19 @@ class MQTTListener
      */
     private $router;
 
+
+    /**
+     * @var Application|Console
+     */
+    private $console;
+
     public function __construct(MQTTClientInterface $client, MQTTHandlerInterface $handler, MqttRouter $router)
     {
         $this->client = $client;
         $this->handler = $handler;
         $this->loop = app(LoopInterface::class);
         $this->router = $router;
+        $this->console = app(Console::class);
     }
 
     protected function registerHandlers()
@@ -125,15 +134,15 @@ class MQTTListener
             $this->createDefaultConnection()
         );
 
-        dump(['working']);
         $connectionPromise->then(
             function () {
                 if (config('mqtt.subscription', 'defined') === 'all') {
                     return $this->subscribeToAllTopics();
                 }
+
                 return $this->subscribeToDefinedTopics();
             }, function (Exception $e) {
-                echo $e->getMessage();
+                $this->console->writeln($e->getMessage());
         });
 
         $this->lastRestart = $this->getTimestampOfLastServerRestart();
@@ -151,9 +160,13 @@ class MQTTListener
         foreach ($this->router->getTopics() as $topic) {
             $this->client->subscribe(new DefaultSubscription($topic['route']))
                 ->then(function (Subscription $subscription) {
-                    echo sprintf("Subscribe To: %s\n", $subscription->getFilter());
+                    $this->console->write(
+                        sprintf("🎖 Subscribe To: %s\n", $subscription->getFilter())
+                    );
                 })->otherwise(function (Exception $e) {
-                    echo sprintf("Subscription Error: %s\n", $e->getMessage());
+                    $this->console->write(
+                        sprintf("🛑 Subscription Error: %s\n", $e->getMessage())
+                    );
                 });
         }
 
@@ -164,9 +177,13 @@ class MQTTListener
     {
         $this->client->subscribe(new DefaultSubscription('#'))
             ->then(function (Subscription $subscription) {
-                echo sprintf("🎖 Subscribed To All Topics (#): %s\n", $subscription->getFilter());
+                $this->console->write(
+                    sprintf("🎖 Subscribed To All Topics (#): %s\n", $subscription->getFilter())
+                );
             })->otherwise(function (Exception $e) {
-                echo sprintf("Subscription Error: %s\n", $e->getMessage());
+                $this->console->write(
+                    sprintf("Subscription Error: %s\n", $e->getMessage())
+                );
             });
 
         return true;

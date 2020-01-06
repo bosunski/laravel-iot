@@ -1,6 +1,6 @@
 <?php
 
-use Xeviant\LaravelIot\Facade\Mqtt;
+//use Xeviant\LaravelIot\Facade\Mqtt;
 
 Mqtt::subscribe('/hello', function ($payload) {
     echo($payload);

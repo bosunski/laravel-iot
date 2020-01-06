@@ -12,6 +12,7 @@ use Xeviant\LaravelIot\Foundation\MqttRouter;
 use Xeviant\LaravelIot\Foundation\MQTTClient;
 use Xeviant\LaravelIot\Foundation\MqttHandler;
 use Xeviant\LaravelIot\Foundation\MQTTListener;
+use Xeviant\LaravelIot\Helpers\Console;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTHandlerInterface;
 use Illuminate\Contracts\Foundation\Application;
@@ -83,6 +84,7 @@ class LaravelMQTTServiceProvider extends ServiceProvider
         $this->loadConfiguration();
         $this->registerMQTTPublisher();
         $this->registerManager();
+        $this->registerConsoleWriter();
     }
 
     public function registerRouter()
@@ -143,7 +145,6 @@ class LaravelMQTTServiceProvider extends ServiceProvider
 
     protected function registerConsoleWriter()
     {
-        $this->app->singleton('xeviant.mqtt', MqttManager::class);
-        $this->app->singleton(MqttManager::class, MqttManager::class);
+        $this->app->singleton(Console::class, Console::class);
     }
 }

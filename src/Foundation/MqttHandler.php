@@ -3,6 +3,7 @@
 namespace Xeviant\LaravelIot\Foundation;
 
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Xeviant\LaravelIot\Helpers\Console;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTHandlerInterface;
 use BinSoul\Net\Mqtt\Connection;
@@ -23,6 +24,10 @@ class MqttHandler implements MQTTHandlerInterface
      * @var Application|MqttRouter
      */
     private $mqttRouter;
+    /**
+     * @var Console
+     */
+    private $console;
 
     /**
      * MqttHandler constructor.
@@ -31,29 +36,38 @@ class MqttHandler implements MQTTHandlerInterface
     public function __construct(MQTTClientInterface $client)
     {
         $this->mqttRouter = app(MqttRouter::class);
+        $this->console = app(Console::class);
         $this->client = $client;
     }
 
     public function onOpen()
     {
-        echo sprintf("MQTT Connection Opened: %s:%s\n", $this->client->getHost(), $this->client->getPort());
+        $this->console->write(
+            sprintf("MQTT Connection Opened: %s:%s\n", $this->client->getHost(), $this->client->getPort())
+        );
     }
 
     public function onClose()
     {
-        echo sprintf("MQTT Connection Closed: %s:%s\n", $this->client->getHost(), $this->client->getPort());
+        $this->console->write(
+            sprintf("MQTT Connection Closed: %s:%s\n", $this->client->getHost(), $this->client->getPort())
+        );
 
         App::make(LoopInterface::class)->stop();
     }
 
     public function onConnect(Connection $connection)
     {
-        echo sprintf("Client *%s* Connected:\n", $connection->getClientID());
+        $this->console->write(
+            sprintf("Client *%s* Connected:\n", $connection->getClientID())
+        );
     }
 
     public function onDisconnect(Connection $connection)
     {
-        echo sprintf("Client *%s* Disconnected\n", $connection->getClientID());
+        $this->console->write(
+            sprintf("Client *%s* Disconnected\n", $connection->getClientID())
+        );
     }
 
     /**
@@ -63,35 +77,34 @@ class MqttHandler implements MQTTHandlerInterface
      */
     public function onMessage(Message $message, MQTTClientInterface $client = null)
     {
-        echo '📩 Message Received';
+        $this->console->write('📩 Message Received');
 
         if ($message->isDuplicate()) {
-            echo ' [duplicated]';
+            $this->console->write( ' [duplicated]');
             return;
         }
 
         if ($message->isRetained()) {
-            echo ' [retained]';
+            $this->console->write(' [retained]');
         }
 
-        echo ': '.$message->getTopic().' => ' . mb_strimwidth($message->getPayload(), 0, 50, '...');
-        echo PHP_EOL;
+        $this->console->writeln(': '.$message->getTopic().' => ' . mb_strimwidth($message->getPayload(), 0, 50, '...'));
 
         try {
             $this->mqttRouter->dispatchToRoute($message->getTopic(), $message->getPayload());
         } catch (ResourceNotFoundException $exception) {
-            echo $exception->getMessage(), PHP_EOL;
+            $this->console->writeln($exception->getMessage());
         }
     }
 
     public function onWarning(Exception $exception)
     {
-        echo sprintf("Warning: %s\n", $exception->getMessage());
+        $this->console->write(sprintf("Warning: %s\n", $exception->getMessage()));
     }
 
     public function onError(Exception $exception)
     {
-        echo sprintf("Error: %s\n", $exception->getMessage());
+        $this->console->write(sprintf("Error: %s\n", $exception->getMessage()));
 
         App::make(LoopInterface::class)->stop();
     }
