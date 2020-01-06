@@ -24,7 +24,7 @@ class MqttTopics extends Command
     protected $description = 'Shows MQTT Topics registered for listening';
 
 
-    private $headers = ['Topic', 'Handler'];
+    private $headers = ['S/N', 'Topic', 'Handler'];
 
 
     /**
@@ -36,13 +36,15 @@ class MqttTopics extends Command
     {
         $topics = app('mqtt.router')->getTopics();
 
-        $this->table($this->headers, collect($topics)->map(function ($topic) {
-            return $this->getTopicDetails($topic);
+        $this->table($this->headers, collect($topics)->map(function ($topic, $key) {
+            return $this->getTopicDetails($topic, $key);
         }));
     }
 
-    protected function getTopicDetails($topic): array
+    protected function getTopicDetails($topic, int $key): array
     {
+        $topic = ['S/N' => ++$key] + $topic;
+
         if (is_callable($topic['handler'])) {
             $topic['handler'] = 'Closure';
         }

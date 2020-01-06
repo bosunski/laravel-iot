@@ -2,6 +2,7 @@
 
 namespace Xeviant\LaravelIot\Foundation;
 
+use BinSoul\Net\Mqtt\Connection;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTClientInterface;
 use Xeviant\LaravelIot\Mqtt\Contracts\MQTTHandlerInterface;
 use BinSoul\Net\Mqtt\DefaultConnection;
@@ -36,16 +37,17 @@ class MQTTListener
      */
     private $lastRestart;
 
-    public function __construct(MQTTClientInterface $client, MQTTHandlerInterface $handler)
+    /**
+     * @var MqttRouter
+     */
+    private $router;
+
+    public function __construct(MQTTClientInterface $client, MQTTHandlerInterface $handler, MqttRouter $router)
     {
         $this->client = $client;
         $this->handler = $handler;
         $this->loop = app(LoopInterface::class);
-    }
-
-    protected function startServer()
-    {
-        $this->loop->run();
+        $this->router = $router;
     }
 
     protected function registerHandlers()
@@ -59,11 +61,12 @@ class MQTTListener
 
         $this->client->on('message', function (Message $message) {
             $this->handler->onMessage($message, $this->client);
-            $this->stopIfNecessary();
+
+            $this->stopListenerIfNecessary();
         });
     }
 
-    public function stopIfNecessary()
+    public function stopListenerIfNecessary()
     {
         $lastRestart = $this->getTimestampOfLastServerRestart();
 
@@ -86,7 +89,7 @@ class MQTTListener
     }
 
     /**
-     * Determine if the server should restart.
+     * Determine if the listener should restart.
      *
      * @return bool
      */
@@ -96,7 +99,7 @@ class MQTTListener
     }
 
     /**
-     * Get the last server restart timestamp, or null.
+     * Get the last listener restart timestamp, or null.
      *
      * @return int|null
      */
@@ -105,6 +108,8 @@ class MQTTListener
         if ($cache = app()['cache']) {
             return $cache->get('xeviant:mqtt:restart');
         }
+
+        return null;
     }
 
     /**
@@ -113,28 +118,55 @@ class MQTTListener
     public function listen()
     {
         $this->registerHandlers();
-        $connection = new DefaultConnection(config('mqtt.username'), config('mqtt.password'));
 
         $connectionPromise = $this->client->connect(
             config('mqtt.host'),
             config('mqtt.port'),
-            $connection
+            $this->createDefaultConnection()
         );
-        
+
         $connectionPromise->then(
             function () {
-                $this->client->subscribe(new DefaultSubscription('#'))
-                    ->then(function (Subscription $subscription) {
-                        echo sprintf("Subscribe: %s\n", $subscription->getFilter());
-                    })->otherwise(function (Exception $e) {
-                        echo sprintf("Error: %s\n", $e->getMessage());
-                    });
+                if (config('mqtt.subscription', 'defined') === 'all') {
+                    return $this->subscribeToAllTopics();
+                }
 
-                return true;
+                return $this->subscribeToDefinedTopics();
             });
 
         $this->lastRestart = $this->getTimestampOfLastServerRestart();
-        
+
         return $connectionPromise;
+    }
+
+    protected function createDefaultConnection(): Connection
+    {
+        return new DefaultConnection(config('mqtt.username'), config('mqtt.password'));
+    }
+
+    protected function subscribeToDefinedTopics()
+    {
+        foreach ($this->router->getTopics() as $topic) {
+            $this->client->subscribe(new DefaultSubscription($topic['route']))
+                ->then(function (Subscription $subscription) {
+                    echo sprintf("Subscribe To: %s\n", $subscription->getFilter());
+                })->otherwise(function (Exception $e) {
+                    echo sprintf("Subscription Error: %s\n", $e->getMessage());
+                });
+        }
+
+        return true;
+    }
+
+    protected function subscribeToAllTopics()
+    {
+        $this->client->subscribe(new DefaultSubscription('#'))
+            ->then(function (Subscription $subscription) {
+                echo sprintf("Subscribe: %s\n", $subscription->getFilter());
+            })->otherwise(function (Exception $e) {
+                echo sprintf("Error: %s\n", $e->getMessage());
+            });
+
+        return true;
     }
 }

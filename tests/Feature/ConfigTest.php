@@ -17,5 +17,6 @@ class ConfigTest extends BaseTestCase
         $this->assertTrue($this->app['config']->get('mqtt.username') === '');
         $this->assertTrue($this->app['config']->get('mqtt.password') === '');
         $this->assertTrue($this->app['config']->get('mqtt.port') === 1883);
+        $this->assertTrue($this->app['config']->get('mqtt.subscription') === 1883);
     }
 }

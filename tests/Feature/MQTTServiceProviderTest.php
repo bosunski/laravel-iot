@@ -2,11 +2,11 @@
 
 namespace Xeviant\LaravelIot\Tests\Feature;
 
-use Amp\Loop\Driver;
 use React\EventLoop\LoopInterface;
 use Xeviant\LaravelIot\Console\Commands\MqttListenerStart;
 use Xeviant\LaravelIot\Console\Commands\MqttTopics;
 use Xeviant\LaravelIot\Console\Commands\MQTTListenerRestart;
+use Xeviant\LaravelIot\Foundation\MqttManager;
 use Xeviant\LaravelIot\Foundation\MqttPublisher;
 use Xeviant\LaravelIot\Foundation\MqttRouter;
 use Xeviant\LaravelIot\Foundation\MQTTListener;
@@ -21,10 +21,14 @@ class MQTTServiceProviderTest extends BaseTestCase
         $this->assertInstanceOf(MqttRouter::class, $this->app->make(MqttRouter::class));
     }
 
+    public function test_manager_was_registered()
+    {
+        $this->assertInstanceOf(MqttManager::class, $this->app->make('xeviant.mqtt'));
+    }
+
     public function test_event_loop_bindings_were_registered()
     {
         $this->assertInstanceOf(LoopInterface::class, $this->app->make(LoopInterface::class));
-        $this->assertInstanceOf(Driver::class, $this->app->make('amp.loop'));
     }
 
     public function test_mqtt_event_handlers_were_registered()

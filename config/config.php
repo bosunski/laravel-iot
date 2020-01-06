@@ -8,4 +8,12 @@ return [
     'port'      => env('MQTT_PORT', 1883),
     'username'  => env('MQTT_USERNAME', ''),
     'password'  => env('MQTT_PASSWORD', ''),
+
+    /**
+     * This allows you to choose between subscribing to ALL Topics or the ones
+     * DEFINED inside the topics.php file.
+     *
+     * Available options are: defined, all
+     */
+    'subscription' => 'defined',
 ];

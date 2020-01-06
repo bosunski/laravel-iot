@@ -6,6 +6,7 @@ use React\EventLoop\Factory;
 use Xeviant\LaravelIot\Console\Commands\MqttListenerStart;
 use Xeviant\LaravelIot\Console\Commands\MqttTopics;
 use Xeviant\LaravelIot\Console\Commands\MQTTListenerRestart;
+use Xeviant\LaravelIot\Foundation\MqttManager;
 use Xeviant\LaravelIot\Foundation\MqttPublisher;
 use Xeviant\LaravelIot\Foundation\MqttRouter;
 use Xeviant\LaravelIot\Foundation\MQTTClient;
@@ -81,6 +82,7 @@ class LaravelMQTTServiceProvider extends ServiceProvider
         $this->registerMQTTServer();
         $this->loadConfiguration();
         $this->registerMQTTPublisher();
+        $this->registerManager();
     }
 
     public function registerRouter()
@@ -131,5 +133,11 @@ class LaravelMQTTServiceProvider extends ServiceProvider
         $this->app->singleton('mqtt.publisher', function(Application $app) {
             return $app->make(MqttPublisher::class);
         });
+    }
+
+    protected function registerManager()
+    {
+        $this->app->singleton('xeviant.mqtt', MqttManager::class);
+        $this->app->singleton(MqttManager::class, MqttManager::class);
     }
 }

@@ -28,7 +28,7 @@ class MqttListenerStart extends Command
      */
     public function handle()
     {
-        resolve('xeviant.mqtt.listener')->listen()->then(function ($started) {
+        resolve('xeviant.mqtt.listener')->listen()->then(function (bool $started) {
             echo "🚀 #Listener Started", PHP_EOL;
         });
 

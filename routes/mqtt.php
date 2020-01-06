@@ -1,15 +1,13 @@
 <?php
 
-use Xeviant\LaravelIot\Foundation\MqttRouter;
+use Xeviant\LaravelIot\Facade\Mqtt;
 
-$mqtt = app()->make(MqttRouter::class);
-
-$mqtt->topic('/state/{id}', function ($id, $payload) {
+Mqtt::topic('/hello', function ($payload) {
     echo($payload);
 });
 
-$mqtt->topic('/values/{id}', 'ValuesController@updateValues');
+Mqtt::topic('/values/{id}', 'ValuesController@updateValues');
 
-$mqtt->topic('/deploy/:id', function ($id, $payload) {
+Mqtt::topic('/deploy/:id', function ($id, $payload) {
     echo($payload);
 });

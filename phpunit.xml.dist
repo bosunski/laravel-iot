@@ -28,8 +28,8 @@
     </logging>
 
     <php>
-        <env name="MQTT_USERNAME" value=""/>
-        <env name="MQTT_PASSWORD" value=""/>
-        <env name="MQTT_HOST" value="test.mosquitto.org"/>
+        <env name="MQTT_USERNAME" value="bosunski"/>
+        <env name="MQTT_PASSWORD" value="gabriel10"/>
+        <env name="MQTT_HOST" value="127.0.0.1"/>
     </php>
 </phpunit>

@@ -61,7 +61,9 @@ class MqttRouter
 
         $params = array_merge($params->toArray(), ['payload' => json_decode($payload, true), 'mqtt' => $this->MQTTClient]);
 
-        if (is_callable($handler = $topicData->get('handler'))) return call_user_func_array($handler, $params);
+        if (is_callable($handler = $topicData->get('handler'))) {
+            return call_user_func_array($handler, $params);
+        }
 
         return $this->handleControllerCall($handler, $params);
     }
