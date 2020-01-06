@@ -1,5 +1,5 @@
 {
-    "name": "xeviant/laravel-iot",
+    "name": "xeviant/laravel-mqtt",
     "description": "A simple IoT focused Package for Laravel",
     "keywords": [
         "bosunski",
