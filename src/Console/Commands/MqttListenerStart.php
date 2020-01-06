@@ -32,6 +32,7 @@ class MqttListenerStart extends Command
             echo "🚀 #Listener Started", PHP_EOL;
         });
 
+        // Run Barry, RUN! ⚡️
         app(LoopInterface::class)->run();
     }
 }

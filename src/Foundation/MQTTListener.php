@@ -162,9 +162,9 @@ class MQTTListener
     {
         $this->client->subscribe(new DefaultSubscription('#'))
             ->then(function (Subscription $subscription) {
-                echo sprintf("Subscribe: %s\n", $subscription->getFilter());
+                echo sprintf("🎖 Subscribed To All Topics (#): %s\n", $subscription->getFilter());
             })->otherwise(function (Exception $e) {
-                echo sprintf("Error: %s\n", $e->getMessage());
+                echo sprintf("Subscription Error: %s\n", $e->getMessage());
             });
 
         return true;
