@@ -161,7 +161,7 @@ class MQTTListener
             $this->client->subscribe(new DefaultSubscription($topic['route']))
                 ->then(function (Subscription $subscription) {
                     $this->console->write(
-                        sprintf("🎖 Subscribe To: %s\n", $subscription->getFilter())
+                        sprintf("🎖 Subscribed To: %s\n", $subscription->getFilter())
                     );
                 })->otherwise(function (Exception $e) {
                     $this->console->write(

@@ -6,6 +6,9 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" packagePrefix="Xeviant\LaravelIot\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/binsoul/net-mqtt" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/binsoul/net-mqtt-client-react" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/clue/stdio-react" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/clue/term-react" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/clue/utf8-react" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/inflector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/instantiator" />

@@ -43,7 +43,7 @@ class MqttHandler implements MQTTHandlerInterface
     public function onOpen()
     {
         $this->console->write(
-            sprintf("MQTT Connection Opened: %s:%s\n", $this->client->getHost(), $this->client->getPort())
+            sprintf("📡 MQTT Connection Opened: %s:%s\n", $this->client->getHost(), $this->client->getPort())
         );
     }
 
@@ -77,7 +77,7 @@ class MqttHandler implements MQTTHandlerInterface
      */
     public function onMessage(Message $message, MQTTClientInterface $client = null)
     {
-        $this->console->write('📩 Message Received');
+        $this->console->write('📩 Received Message');
 
         if ($message->isDuplicate()) {
             $this->console->write( ' [duplicated]');
